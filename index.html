@@ -1,60 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pass-word Radio Now Playing</title>
+  <meta charset="UTF-8">
+  <title>Now Playing - Pass-word Radio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #00003A;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 30px;
+      margin: 0;
+      background: #00003A;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-    img {
-      max-width: 300px;
-      border-radius: 12px;
+    img.artwork {
+      width: 100%;
+      max-width: 360px;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
       margin-bottom: 20px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.2);
     }
-    h1, h2 {
-      margin: 10px 0;
+    .now-playing {
+      text-align: center;
+      background: #ffffff0d;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 18px;
     }
-    #track {
-      font-size: 1.2em;
-      font-weight: bold;
+    .brand {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand img {
+      height: 40px;
+      width: auto;
+    }
+    .brand span {
+      font-weight: 700;
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
+  <div class="brand">
+    <img src="https://www.passwordradio.com/uploads/1/5/3/0/153038012/pass-word-logo-premium_orig.jpg" alt="Pass-word Radio Logo">
+    <span>PASS-WORD RADIO</span>
+  </div>
 
-  <h1>🎶 Now Playing on Pass-word Radio</h1>
-  <img id="artwork" src="" alt="Artwork">
-  <h2 id="track">Loading...</h2>
+  <!-- Artwork Embed -->
+  <script src="https://embed.radio.co/embed/s599983150/artwork.js"></script>
 
-  <script>
-    async function fetchNowPlaying() {
-      try {
-        const res = await fetch('https://public.radio.co/stations/s599983150/now-playing');
-        const data = await res.json();
-        const track = `${data.current_track.title} - ${data.current_track.artist}`;
-        const artwork = data.current_track.artwork_url || 'https://via.placeholder.com/300x300?text=No+Artwork';
-
-        document.getElementById('track').textContent = track;
-        document.getElementById('artwork').src = artwork;
-      } catch (err) {
-        console.error('Error fetching metadata:', err);
-        document.getElementById('track').textContent = 'Unable to load song info';
-      }
-    }
-
-    // Initial load
-    fetchNowPlaying();
-
-    // Refresh every 20 seconds
-    setInterval(fetchNowPlaying, 20000);
-  </script>
-
+  <div class="now-playing">Now Playing - Live from Dubai</div>
 </body>
 </html>
