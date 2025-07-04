@@ -2,63 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Now Playing - Pass-word Radio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <title>Pass-word Radio Now Playing</title>
   <style>
     body {
+      background-color: #00003A;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      background: #00003A;
-      font-family: 'Inter', sans-serif;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    img.artwork {
-      width: 100%;
-      max-width: 360px;
-      border-radius: 16px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-      margin-bottom: 20px;
-    }
-    .now-playing {
+      padding: 20px;
       text-align: center;
-      background: #ffffff0d;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-size: 18px;
     }
-    .brand {
+
+    .logo {
       position: absolute;
       top: 20px;
       left: 20px;
+      width: 120px;
+    }
+
+    .header-text {
+      margin-top: 60px;
+      font-size: 1.2em;
+      font-weight: 500;
+      color: #FFD700;
+    }
+
+    #artwork {
+      width: 300px;
+      height: 300px;
+      border-radius: 15px;
+      margin: 30px auto 20px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    }
+
+    #track {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .waveform {
       display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .brand img {
+      justify-content: center;
+      align-items: flex-end;
       height: 40px;
-      width: auto;
+      gap: 4px;
+      margin-top: 20px;
     }
-    .brand span {
-      font-weight: 700;
-      font-size: 20px;
+
+    .bar {
+      width: 4px;
+      height: 10px;
+      background: #00FFCC;
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    .bar:nth-child(2) { animation-delay: 0.1s; }
+    .bar:nth-child(3) { animation-delay: 0.2s; }
+    .bar:nth-child(4) { animation-delay: 0.3s; }
+    .bar:nth-child(5) { animation-delay: 0.4s; }
+    .bar:nth-child(6) { animation-delay: 0.3s; }
+    .bar:nth-child(7) { animation-delay: 0.2s; }
+    .bar:nth-child(8) { animation-delay: 0.1s; }
+
+    @keyframes pulse {
+      0%, 100% { height: 10px; }
+      50% { height: 40px; }
     }
   </style>
 </head>
 <body>
-  <div class="brand">
-    <img src="https://www.passwordradio.com/uploads/1/5/3/0/153038012/pass-word-logo-premium_orig.jpg" alt="Pass-word Radio Logo">
-    <span>PASS-WORD RADIO</span>
+
+  <!-- Logo -->
+  <img src="https://www.passwordradio.com/uploads/1/5/3/0/153038012/pass-word-logo-premium_orig.jpg" class="logo" alt="Pass-word Radio Logo">
+
+  <!-- Header Text -->
+  <div class="header-text">🔴 Playing Live from Dubai</div>
+
+  <!-- Artwork -->
+  <img id="artwork" src="" alt="Artwork">
+
+  <!-- Track Title -->
+  <div id="track">Loading...</div>
+
+  <!-- Waveform Animation -->
+  <div class="waveform">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
   </div>
 
-  <!-- Artwork Embed -->
-  <script src="https://embed.radio.co/embed/s599983150/artwork.js"></script>
+  <!-- Script to Fetch Metadata -->
+  <script>
+    async function fetchNowPlaying() {
+      try {
+        const response = await fetch('https://public.radio.co/stations/s599983150/now-playing');
+        const data = await response.json();
 
-  <div class="now-playing">Now Playing - Live from Dubai</div>
+        const trackText = `${data.current_track.title} - ${data.current_track.artist}`;
+        const artwork = data.current_track.artwork_url || 'https://via.placeholder.com/300x300?text=No+Artwork';
+
+        document.getElementById('track').textContent = trackText;
+        document.getElementById('artwork').src = artwork;
+      } catch (error) {
+        document.getElementById('track').textContent = "Unable to load track info.";
+        console.error(error);
+      }
+    }
+
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying, 20000);
+  </script>
+
 </body>
 </html>
