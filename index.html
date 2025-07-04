@@ -1,64 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Now Playing - Pass-word Radio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pass-word Radio Now Playing</title>
   <style>
     body {
-      margin: 0;
-      background: #00003A;
-      font-family: 'Inter', sans-serif;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    img.artwork {
-      width: 100%;
-      max-width: 360px;
-      border-radius: 16px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-      margin-bottom: 20px;
-    }
-    .now-playing {
+      background-color: #00003A;
+      color: #fff;
+      font-family: Arial, sans-serif;
       text-align: center;
-      background: #ffffff0d;
-      padding: 10px 20px;
+      padding: 30px 10px;
+    }
+
+    img {
+      max-width: 300px;
       border-radius: 12px;
-      font-size: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.2);
     }
-    .brand {
-      position: absolute;
-      top: 20px;
-      left: 20px;
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.8em;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+
+    /* Waveform animation */
+    .waveform {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 4px;
+      margin: 20px auto;
+      height: 30px;
     }
-    .brand img {
-      height: 40px;
-      width: auto;
+
+    .bar {
+      width: 4px;
+      background: #fff;
+      animation: pulse 1s infinite ease-in-out;
     }
-    .brand span {
-      font-weight: 700;
-      font-size: 20px;
+
+    .bar:nth-child(2) { animation-delay: 0.1s; }
+    .bar:nth-child(3) { animation-delay: 0.2s; }
+    .bar:nth-child(4) { animation-delay: 0.3s; }
+    .bar:nth-child(5) { animation-delay: 0.4s; }
+    .bar:nth-child(6) { animation-delay: 0.3s; }
+    .bar:nth-child(7) { animation-delay: 0.2s; }
+    .bar:nth-child(8) { animation-delay: 0.1s; }
+
+    @keyframes pulse {
+      0%, 100% { height: 5px; }
+      50% { height: 30px; }
     }
   </style>
 </head>
 <body>
-  <div class="brand">
-    <img src="https://www.passwordradio.com/uploads/1/5/3/0/153038012/pass-word-logo-premium_orig.jpg" alt="Pass-word Radio Logo">
-    <span>PASS-WORD RADIO</span>
+
+  <h1>🎶 Now Playing on Pass-word Radio</h1>
+  <img id="artwork" src="" alt="Artwork">
+  <h2 id="track">Loading...</h2>
+
+  <div class="waveform">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
   </div>
 
-  <!-- Artwork Embed -->
-  <script src="https://embed.radio.co/embed/s599983150/artwork.js"></script>
+  <script>
+    async function fetchNowPlaying() {
+      try {
+        const res = await fetch('https://public.radio.co/stations/s599983150/now-playing');
+        const data = await res.json();
+        const track = `${data.current_track.title} - ${data.current_track.artist}`;
+        const artwork = data.current_track.artwork_url || 'https://via.placeholder.com/300x300?text=No+Artwork';
 
-  <div class="now-playing">Now Playing - Live from Dubai</div>
+        document.getElementById('track').textContent = track;
+        document.getElementById('artwork').src = artwork;
+      } catch (err) {
+        console.error('Error fetching metadata:', err);
+        document.getElementById('track').textContent = 'Unable to load song info';
+      }
+    }
+
+    fetchNowPlaying();
+    setInterval(fetchNowPlaying, 20000);
+  </script>
+
 </body>
 </html>
